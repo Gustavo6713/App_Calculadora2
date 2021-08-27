@@ -3,8 +3,11 @@ package br.senai.sp.jandira.imcapp20_a.ui
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import br.senai.sp.jandira.imcapp20_a.R
 import br.senai.sp.jandira.imcapp20_a.dao.UsuarioDao
@@ -15,6 +18,9 @@ import java.util.*
 const val CODE_IMAGE = 100
 
 class NovoUsuarioActivity : AppCompatActivity() {
+
+    var imageBitmap: Bitmap? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_novo_usuario)
@@ -44,8 +50,8 @@ class NovoUsuarioActivity : AppCompatActivity() {
                         mesZero = "0${_mes + 1}"
                     }
 
-                et_data_nascimento.setText("$dia/%_mesZero/$_ano")
-            }, ano, mes, dia)
+                    et_data_nascimento.setText("$diaZero/$mesZero/$_ano")
+                }, ano, mes, dia)
             dpd.show()
         }
 
@@ -72,7 +78,7 @@ class NovoUsuarioActivity : AppCompatActivity() {
             et_altura.text.toString().toDouble(),
             et_data_nascimento.toString(),
              'M',
-             null)
+             imageBitmap)
 
             val dao = UsuarioDao(this, usuario)
             dao.gravar()
@@ -90,7 +96,7 @@ class NovoUsuarioActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
 
         // Definir qual o tipo de conteudo devera ser obtido
-        intent.type = "image/"
+        intent.type = "image/*"
 
         // iniciar activity, mas neste caso não queremos que, ela retorne algo para gente, a imagem
         startActivityForResult(
@@ -98,5 +104,21 @@ class NovoUsuarioActivity : AppCompatActivity() {
                 intent,
                 "Escolha uma foto"),
             CODE_IMAGE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == CODE_IMAGE && resultCode == -1) {
+
+            // Recuperar a imagem no stream
+            val stream = contentResolver.openInputStream(data!!.data!!)
+
+            // transfomrar o resultado em um Bitmap
+            imageBitmap = BitmapFactory.decodeStream(stream)
+
+            //colocar a imagem na ImageView
+            iv_profile.setImageBitmap(imageBitmap)
+        }
     }
 }
