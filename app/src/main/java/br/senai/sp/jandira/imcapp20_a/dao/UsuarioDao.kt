@@ -4,7 +4,9 @@ import android.content.ContentValues
 import android.content.Context
 import android.util.Log
 import br.senai.sp.jandira.imcapp20_a.model.Usuario
+import br.senai.sp.jandira.imcapp20_a.utils.converterBitmapParaBase64
 import br.senai.sp.jandira.imcapp20_a.utils.converterBitmapParaByteArray
+import br.senai.sp.jandira.imcapp20_a.utils.converterByteArrayParaBitmap
 import br.senai.sp.jandira.imcapp20_a.utils.obterDiferencaEmDatasEmAnos
 import java.time.LocalDate
 import java.time.Period
@@ -100,6 +102,13 @@ class UsuarioDao(val context: Context, val usuario: Usuario?) {
             editor.putString("profissao", cursor.getString(profissaoIndex))
             editor.putString("idade", obterDiferencaEmDatasEmAnos(dataNascimento))
             editor.putInt("peso", 0)
+
+            //Converter o byteArray do banco em bitmap
+            var bitmap = converterByteArrayParaBitmap(cursor.getBlob(fotoIndex))
+
+            Log.i("XTPO", converterBitmapParaBase64(bitmap))
+
+            editor.putString("foto", converterBitmapParaBase64(bitmap))
             editor.apply()
         }
 
