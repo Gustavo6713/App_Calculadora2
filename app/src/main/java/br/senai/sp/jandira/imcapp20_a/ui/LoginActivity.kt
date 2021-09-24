@@ -24,8 +24,10 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-//        obterDiferencaEmDatasEmAnos("19/08/1999")
-//        obterDiferencaEmDatasEmAnos("10/05/1987")
+        // Remover a AppBar
+        supportActionBar!!.hide()
+
+        // ***** TESTAR O MÉTODO obterDiferencaEntreDatasEmAnos
 
         val dados = getSharedPreferences("dados_usuario", Context.MODE_PRIVATE)
         val lembrar = dados.getBoolean("lembrar", false)
@@ -72,22 +74,5 @@ class LoginActivity : AppCompatActivity() {
             abrirDashBoard()
         }
 
-//        val dados = getSharedPreferences("dados_usuario", Context.MODE_PRIVATE)
-//
-//        val userPreferences = dados.getString("email", "Não encontrado")
-//        val passPreferences = dados.getString("senha", "Não encontrado")
-
-//        if (user == userPreferences && pass == passPreferences){
-//
-//            // Gravar o lembrar no sharedPreferences
-//            val editor = dados.edit()
-//            editor.putBoolean("lembrar", check_lembrar.isChecked)
-//            editor.apply()
-//
-//            abrirDashBoard()
-//
-//        } else {
-//            tvMensagemErro.text = "Usuário ou senha incorretos!"
-//        }
     }
 }
